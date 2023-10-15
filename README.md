@@ -42,210 +42,125 @@ Check if the outliersare removed from data set using graphical methods.
 ### Step 8
 Save the final data set into the file.
 
-
 # Program:
-# (1) & (2) Examine price_per_sqft column and use IQR to remove outliers and create new dataframe
 ```
-Developed by: Vishnupriya R
-Roll number: 212222110054
+FOR BHP.CSV FILE
 
 import pandas as pd
-import numpy as np
-import seaborn as sns
-
-df = pd.read_csv("/content/bhp.csv")
+df=pd.read_csv("/bhp.csv")
 df
-
-df.head()
-
-df.describe()
-
 df.info()
-
-df.isnull().sum()
-
 df.shape
-
+import seaborn as sns
 sns.boxplot(x="price_per_sqft",data=df)
+Q1=df['price_per_sqft'].quantile(0.25)
+Q3=df['price_per_sqft'].quantile(0.75)
+IQR=Q3-Q1
+lower=Q1-1.5*IQR
+upper=Q3+1.5*IQR
+newdata=df[(df['price_per_sqft']>=lower) & (df['price_per_sqft']<=upper)]
+print(newdata)
+newdata=df[(df['price_per_sqft']>=lower) | (df['price_per_sqft']<=upper)]
+print(newdata)
+newdata.shape
+sns.boxplot(x="price_per_sqft",data=newdata)
+z_score=np.abs(stats.zscore(df['price_per_sqft']))
+newdata2=df[(z_score<3)]
+print(newdata2)
+outlier2=df[(z_score>=3)]
+print(outlier2)
+newdata2.shape
+sns.boxplot(x="price_per_sqft",data=newdata2)
 
-q1 = df['price_per_sqft'].quantile(0.25)
-q3 = df['price_per_sqft'].quantile(0.75)
-print("First Quantile =",q1,"\nSecond Quantile =",q3)
+FOR HEIGHT_WEIGHT.CSV FILE
 
-IQR = q3-q1
-ul = q3+1.5*IQR
-ll = q1-1.5*IQR
-
-df1 =df[((df['price_per_sqft']>=ll)&(df['price_per_sqft']<=ul))]
-df1
-
-df1.shape
-
-sns.boxplot(x="price_per_sqft",data=df1)
-```
-
-# (3)Examine price_per_sqft column and use zscore of 3 to remove outliers
-```
-from scipy import stats
-z = np.abs(stats.zscore(df['price_per_sqft']))
-df2 = df[(z<3)]
-df2
-
-print(df2.shape)
-sns.boxplot(x="price_per_sqft",data=df2)
-```
-
-# (4)(i) For the data set height_weight.csv detect weight outliers using IQR method
-```
-df3 = pd.read_csv("height_weight.csv")
-df3
-
-df3.head()
-
-df3.info()
-
-df3.describe()
-
-df3.isnull().sum()
-
-df3.shape
-
-sns.boxplot(x="weight",data=df3)
-
-q1 = df3['weight'].quantile(0.25)
-q3 = df3['weight'].quantile(0.75)
-print("First Quantile =",q1,"\nSecond Quantile =",q3)
-
-IQR = q3-q1
-ul = q3+1.5*IQR
-ll = q1-1.5*IQR
-
-df4 =df3[((df3['weight']>=ll)&(df3['weight']<=ul))]
-df4
-
-df4.shape
-
-sns.boxplot(x="weight",data=df4)
-```
-
-# (4)(ii) For the data set height_weight.csv detect height outliers using IQR method
-```
-sns.boxplot(x="height",data=df3)
-q1 = df3['height'].quantile(0.25)
-q3 = df3['height'].quantile(0.75)
-print("First Quantile =",q1,"\nSecond Quantile =",q3)
-
-IQR = q3-q1
-ul = q3+1.5*IQR
-ll = q1-1.5*IQR
-
-df5 =df3[((df3['height']>=ll)&(df3['height']<=ul))]
-df5
-
-df5.shape
-
-sns.boxplot(x="height",data=df5)
+import pandas as pd
+df=pd.read_csv("/height_weight.csv")
+df
+df.info()
+df.shape
+df.describe()
+import seaborn as sns
+sns.boxplot(x="height",data=df)
+Q1=df['height'].quantile(0.25)
+Q3=df['height'].quantile(0.75)
+IQR=Q3-Q1
+lower=Q1-1.5*IQR
+upper=Q3+1.5*IQR
+newdata1=df[(df['height']>=lower) | (df['height']<=upper)]
+print(newdata1)
+newdata=df[(df['height']>=lower) & (df['height']<=upper)]
+print(newdata)
+sns.boxplot(x='height',data=newdata1)
 ```
 # OUTPUT:
-# (1)(2) Examine price_per_sqft column and use IQR to remove outliers and create new dataframe.
-# Dataset:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/2619e47d-2f11-46e6-be46-cf11ae2e4013)
+## Original data for bhp.csv file:
+![265034788-e10bb3a9-b641-4ee7-9723-5d1d7984efdd](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/1c5d8545-947c-4ac7-af89-a5ba56a34362)
 
-# Dataset Head:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/7e84607a-24d3-4f84-8d10-37a0b78db882)
+## Dataset information:
+![265034880-38816f72-8267-4668-aebf-464ae59fd67d](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/ce93bb13-5f14-498c-8379-efce8d563b0b)
 
-# Dataset info:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/3a3ff149-9a08-401d-9232-201d74796e9c)
+## Shape of a data:
+![265034941-72a124a8-9cd1-4569-ad2a-175e705614bb](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/dc9ee8ac-1295-44a1-87d6-f9ff030a7259)
 
-# Dataset describe:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/867f5a20-0f8c-4a5a-8801-c32ceb9c56d0)
 
-# Null values:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/8655d297-328d-4714-95da-ad546b909edb)
+## Box Plot of price_per_sqft column without outliers:
+![265035056-5d30f29b-5895-4283-8a15-e5911b4a5273](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/b1438172-6173-45df-96f8-af73c027e4a5)
 
-# Dataset shape:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/6056b804-448e-420a-9ea2-7168d6161cbe)
 
-# Box plot of price_per_sqft column with outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/56e3e8ee-aad8-4f3c-8764-d47089eeaf40)
+## Removing the outlier for price_per_sqft column by using IRQ :
+![265035157-3315b091-1878-4bf7-af46-22b902dac0a3](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/70d827c9-f712-4111-9665-70d458c85a46)
+![265035253-08eb1088-795a-4faa-9326-ee538b403456](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/b98af739-e32d-43c4-b8f8-ac9fc86681a5)
 
-# price_per_sqft - Dataset after removing outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/63bfadea-da0d-41cf-a01a-2020f7f5f06e)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/dc3fc493-82ef-4022-808c-baf02fcdbb49)
 
-# price_per_sqft - Shape of Dataset after removing outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/713051ac-c9c5-40ef-8ada-f72df08c88b6)
+## Box Plot of price_per_sqft column after IRQ:
+![265035343-235388ed-c469-46d3-a453-49c7015f80c8](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/6a835d7b-d16d-4554-955a-d36ce4e05165)
 
-# Box Plot of price_per_sqft column without outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/476c84c2-423d-4249-9cca-9959ad3bad3d)
 
-# (3) Examine price_per_sqft column and use zscore of 3 to remove outliers
-# Dataset after removal of outlier using z score:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/c7802db9-fbb7-4ffd-a212-992368294b02)
+## Removing the outlier for price_per_sqft column by using zscore of 3 :
+![265035456-38140855-ea08-4740-93b0-5fd1d6930dd1](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/1e1dd40f-3b44-414c-9d88-ede376afaec7)
+![265035518-567ca3e2-74cd-411f-abf7-24c3a9f482b7](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/f7f9ae82-34c8-4313-a81b-64a94508f9ce)
 
-# Shape of Dataset after removal of outlier using z score:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/80146c54-dc15-478d-9539-b31d35c06404)
+## Box Plot of price_per_sqft column after zscore of 3:
+![265035583-06ff570b-b0db-47ae-a8ab-b5146da18ebd](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/480168b6-d443-4cd1-9baa-15e0d55efae7)
 
-# (4) For the data set height_weight.csv detect weight and height outliers using IQR method:
-# Dataset:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/94dfff6c-300d-4ea1-bffe-352776ae443e)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/7ea6dd84-ed9d-4975-9bd0-3799b90cb74a)
+## Original data of height_weight.csv file for height:
+![265041930-735932f9-58ed-446e-9d5a-5474a606af2c](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/1a8f2d56-1847-4a15-a210-d82b1e35e3a0)
 
-# Dataset head:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/a2fb1930-1a19-4133-8dc9-cb30be0d0913)
+## Dataset information:
+![265042116-a6a5b7f0-56b6-4cd5-8472-271a755689c6](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/3c7b5f38-26d5-4833-b07d-3b51dc89b833)
 
-# Dataset info:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/c5928efd-7d3a-4ac8-b94f-5865e70eaebe)
+## Shape of a dataset:
+![265042347-c330aa96-2008-4a4a-ac91-9ae30cf84894](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/97fcc371-a2fa-4700-8cd0-632cd896974b)
 
-# Dataset describe:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/e40b34f9-ff64-4a53-90e7-4c7aeb835bc2)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/2dbc2bef-163e-4478-9edc-0e0cde039431)
+## Box plot of height column without outlier:
+![265042576-ecb98058-2e13-45ea-8a4c-e186beb1ac83](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/00825a5c-9343-40f8-a213-eda4eb7a0232)
 
-# Null values:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/a41c3716-2efa-4253-96c9-84b854b76da0)
+## Removing the outlier for height column by using IRQ :
+![265042871-9c8f342c-610f-48a7-8fa4-dbaf7880eeb3](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/df12c64f-9f69-429b-873c-5bc77305d4db)
+![265042962-6f5e8c88-f43e-4e90-be5d-37e0d49580c1](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/bb1c85ff-69b2-470d-b71d-5d2f00fcd9b7)
 
-# Data set Shapes:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/c2532e04-3369-4c14-a687-36efa384209d)
+## Box Plot of height column after IRQ:
+![265043050-8169c62a-2ead-4ffd-99fd-9d8c5d6c6d06](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/58eb34f3-1a64-4345-8f22-0b3e31fb4a33)
 
-# Weight - with outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/a3e45816-a325-4b61-9a84-f50bacb45613)
+## Original data of height_weight.csv file for weight:
+![265178232-4a366a77-3856-4473-adbb-1417e92f92c9](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/cb87da7d-5108-41d5-b14e-31c87a856236)
 
-# Weight - Dataset after removing Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/289ba950-8543-49a6-827f-ba9c721f3d6f)
+## Dataset information:
+![265178257-0300eb8e-8208-4339-a9b4-b71a93bf464b](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/096e9d35-8d06-4701-b080-c9c3abf402c7)
 
-# Weight - Shape of Dataset after removing Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/ed952c68-3419-4bd8-a369-a0148291f008)
+## Shape of a dataset:
+![265178285-5ce6ea82-696b-4855-b8ff-45cf26de0644](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/0eb4a9e1-da77-4a6f-afa7-7394bb99bae1)
 
-# Weight - Without Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/eb2e9daa-d777-4379-8368-87e7febe92cd)
+## Box plot weight column without outlier:
+![265178341-30e09c44-6e26-4109-9ea9-08fa7b81363b](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/61c460e4-ddf4-45e7-800c-0034278e61b4)
 
-# Height - With outliers:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/049b2e40-c2bc-4370-8e5c-89d406b6396a)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/4a20a7b4-5649-4288-8d9a-de34188f14de)
+## Removing the outlier for weight column by using IRQ :
+![265178373-24f368e3-c310-4578-82c0-b2b2ab884715](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/0694731a-3986-4ba0-a988-fa7ac696c0ce)
+![265178586-3ed556f5-eab2-4162-9f15-ef4d9cdca503](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/f09f43aa-b24b-4aa0-90c7-5e97c8a33c20)
 
-# Height - Dataset after removing Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/ef0b07ac-3a53-48fb-9b3c-931a6dc287f3)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/2d4a8504-cab2-4588-8f5b-3a313cdda8eb)
-
-# Height - Shape of Dataset after removing Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/f6bc5c1e-d181-4841-a493-abfbb7289cf0)
-
-# Height - Without Outliers using IQR method:
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/39015549-4fd0-413b-a00f-02038c856b8e)
-![image](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/184cec00-1518-4311-a9d8-d4d18ad0d53d)
+## Box Plot of height column after IRQ:
+![265178655-f5acbd89-2880-4067-ac9e-5a71ccb87493](https://github.com/vishnupriyaramesh17/ODD2023---Datascience---Ex-02/assets/119393589/de75625e-c8e1-4b50-9f7c-d950780e8414)
 
 # Result:
 Thus the outliers are detected and removed in the given file and the final data set is saved into the file.
-
-
-
-
-
-
-
-
-
-
-
-
-
